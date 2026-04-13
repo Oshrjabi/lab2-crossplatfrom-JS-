@@ -183,6 +183,26 @@
             border-radius: 1rem;
         }
 
+        .delete-note:hover {
+            background: #dc2626;
+        }
+
+        .edit-note {
+            background: #f59e0b;
+            padding: 0.3rem 1rem;
+            font-size: 0.7rem;
+            border-radius: 1rem;
+        }
+
+        .edit-note:hover {
+            background: #d97706;
+        }
+
+        .note-actions {
+            display: flex;
+            gap: 0.4rem;
+        }
+
         hr {
             margin: 1rem 0;
         }
@@ -207,7 +227,6 @@
 
         <div class="grid">
             <div class="card" id="left-panel">
-
                 <h2>Add a note</h2>
                 <div class="form-group">
                     <label>Title *</label>
@@ -242,14 +261,15 @@
         </div>
 
         <footer>
-            💡 BOM: confirm() on delete · alert() on empty title · resize event updates window size.
+            💡 BOM: confirm() on delete · alert() on empty title · resize event updates window size · prompt() to rename.
         </footer>
 
     </div>
     <script>
         // State
-        let notes = []; // stores every note object: { id, title, content }
-        let nextId = 1; // gives each note a unique ID
+        let notes = [];
+        let nextId = 1;
+
         // DOM REFERENCES
         const notesContainer = document.getElementById("notesContainer");
         const titleInput = document.getElementById("noteTitle");
@@ -264,12 +284,12 @@
             const count = notes.length;
             noteCounterSpan.textContent = count === 1 ? "1 note" : `${count} notes`;
         }
+
         function renderNotes() {
-            // Clear container safely (no innerHTML)
             while (notesContainer.firstChild) {
                 notesContainer.removeChild(notesContainer.firstChild);
             }
-            // empty-state message
+
             if (notes.length === 0) {
                 const emptyMsg = document.createElement("div");
                 emptyMsg.textContent = "No notes yet. Add your first note!";
@@ -280,29 +300,42 @@
                 updateCounter();
                 return;
             }
+
             notes.forEach(note => {
-                // wrapper div
                 const noteDiv = document.createElement("div");
                 noteDiv.classList.add("note-item");
                 noteDiv.setAttribute("data-id", note.id);
 
-                // title row
                 const titleDiv = document.createElement("div");
                 titleDiv.classList.add("note-title");
+
                 const titleSpan = document.createElement("span");
                 titleSpan.textContent = note.title;
 
-                // delete button
+                // Actions wrapper
+                const actionsDiv = document.createElement("div");
+                actionsDiv.classList.add("note-actions");
+
+                // Edit button
+                const editBtn = document.createElement("button");
+                editBtn.textContent = "✏ Edit";
+                editBtn.classList.add("edit-note");
+                editBtn.setAttribute("data-action", "edit");
+                editBtn.setAttribute("data-id", note.id);
+
+                // Delete button
                 const deleteBtn = document.createElement("button");
                 deleteBtn.textContent = "Delete";
                 deleteBtn.classList.add("delete-note");
                 deleteBtn.setAttribute("data-action", "delete");
                 deleteBtn.setAttribute("data-id", note.id);
 
-                titleDiv.appendChild(titleSpan);
-                titleDiv.appendChild(deleteBtn);
+                actionsDiv.appendChild(editBtn);
+                actionsDiv.appendChild(deleteBtn);
 
-                // content paragraph
+                titleDiv.appendChild(titleSpan);
+                titleDiv.appendChild(actionsDiv);
+
                 const contentP = document.createElement("p");
                 contentP.classList.add("note-content");
                 contentP.textContent = note.content || "(no additional content)";
@@ -311,13 +344,12 @@
                 noteDiv.appendChild(contentP);
                 notesContainer.appendChild(noteDiv);
             });
-            updateCounter();
 
+            updateCounter();
         }
 
         function addNote() {
             const title = titleInput.value.trim();
-            // BOM: alert() validation
             if (title === "") {
                 alert("❌ Title cannot be empty!");
                 titleInput.focus();
@@ -326,23 +358,33 @@
             const content = contentInput.value.trim();
             notes.push({ id: nextId++, title, content });
             renderNotes();
-            // clear and refocus
             titleInput.value = "";
             contentInput.value = "";
             titleInput.focus();
         }
 
         function deleteNoteById(id) {
-            // BOM: confirm() returns true/false
             const ok = confirm("Are you sure you want to delete this note?");
             if (!ok) return;
-
             const index = notes.findIndex(n => n.id === id);
             if (index !== -1) {
                 notes.splice(index, 1);
                 renderNotes();
             }
         }
+
+        function editNoteById(id) {
+            const found = notes.find(n => n.id === id);
+            if (found) {
+                // BOM: prompt() returns new string or null
+                const newTitle = prompt("New title:", found.title);
+                if (newTitle !== null && newTitle.trim() !== "") {
+                    found.title = newTitle.trim();
+                    renderNotes();
+                }
+            }
+        }
+
         function clearAllNotes() {
             if (notes.length === 0) {
                 alert("No notes to clear.");
@@ -366,24 +408,24 @@
         window.addEventListener("resize", updateWindowSize);
 
         function showUserAgent() {
-        let agent = navigator.userAgent;
-        if (agent.length > 55) agent = agent.slice(0, 52) + "...";
-        userAgentSpan.textContent = agent;
+            let agent = navigator.userAgent;
+            if (agent.length > 55) agent = agent.slice(0, 52) + "...";
+            userAgentSpan.textContent = agent;
         }
 
         function addSampleNotes() {
             if (notes.length === 0) {
                 notes.push({
-                 id: nextId++,
-                 title: "Hello BOM",
-                 content: "Try resizing the window → watch width/height update!"
-            });
-            notes.push({
-                 id: nextId++,
-                title: "Delete me",
-                content: "Click delete and confirm."
-        });
-        renderNotes();
+                    id: nextId++,
+                    title: "Hello BOM",
+                    content: "Try resizing the window → watch width/height update!"
+                });
+                notes.push({
+                    id: nextId++,
+                    title: "Delete me",
+                    content: "Click delete and confirm."
+                });
+                renderNotes();
             }
         }
 
@@ -391,21 +433,28 @@
             addSampleNotes();
             updateWindowSize();
             showUserAgent();
-
             addBtn.addEventListener("click", addNote);
             clearAllBtn.addEventListener("click", clearAllNotes);
         }
 
         init();
 
-        addBtn.addEventListener("click", addNote);
-        clearAllBtn.addEventListener("click", clearAllNotes);
         notesContainer.addEventListener("click", (e) => {
-            const btn = e.target.closest('[data-action="delete"]');
-            if (btn) {
-                const id = parseInt(btn.getAttribute("data-id"), 10);
+            // Handle delete
+            const deleteTarget = e.target.closest('[data-action="delete"]');
+            if (deleteTarget) {
+                const id = parseInt(deleteTarget.getAttribute("data-id"), 10);
                 deleteNoteById(id);
+            }
+
+            // Handle edit
+            const editTarget = e.target.closest('[data-action="edit"]');
+            if (editTarget) {
+                const id = parseInt(editTarget.getAttribute("data-id"), 10);
+                editNoteById(id);
             }
         });
     </script>
-</body></html>
+</body>
+
+</html>
