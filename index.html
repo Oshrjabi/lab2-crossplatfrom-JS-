@@ -376,6 +376,17 @@
             }
         }
 
+        function init() {
+            addSampleNotes();
+            updateWindowSize();
+            showUserAgent();
+
+            addBtn.addEventListener("click", addNote);
+            clearAllBtn.addEventListener("click", clearAllNotes);
+        }
+
+        init();
+
         addBtn.addEventListener("click", addNote);
         clearAllBtn.addEventListener("click", clearAllNotes);
         notesContainer.addEventListener("click", (e) => {
