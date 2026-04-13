@@ -320,6 +320,13 @@
             contentInput.value = "";
             titleInput.focus();
         }
+
+        function updateWindowSize() {
+            const w = window.innerWidth;
+            const h = window.innerHeight;
+            windowSizeSpan.textContent = `${w} x ${h} px`;
+        }
+
         function deleteNoteById(id) {
             // BOM: confirm() returns true/false
             const ok = confirm("Are you sure you want to delete this note?");
