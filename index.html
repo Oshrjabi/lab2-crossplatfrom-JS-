@@ -327,6 +327,8 @@
             windowSizeSpan.textContent = `${w} x ${h} px`;
         }
 
+        window.addEventListener("resize", updateWindowSize);
+
         function deleteNoteById(id) {
             // BOM: confirm() returns true/false
             const ok = confirm("Are you sure you want to delete this note?");
