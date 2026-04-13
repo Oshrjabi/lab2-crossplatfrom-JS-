@@ -261,7 +261,7 @@
         </div>
 
         <footer>
-            💡 BOM: confirm() on delete · alert() on empty title · resize event updates window size · prompt() to rename · Enter key to add.
+            💡 BOM: confirm() on delete · alert() on empty title · resize event updates window size · prompt() to rename · Enter key to add · screen-size category.
         </footer>
 
     </div>
@@ -398,7 +398,11 @@
         function updateWindowSize() {
             const w = window.innerWidth;
             const h = window.innerHeight;
-            windowSizeSpan.textContent = `${w} x ${h} px`;
+            let category;
+            if (w < 480) category = "📱📱 Mobile";
+            else if (w < 1024) category = "💻💻 Tablet";
+            else category = "🖥🖥 Desktop";
+            windowSizeSpan.textContent = `${w} x ${h} px (${category})`;
         }
 
         window.addEventListener("resize", updateWindowSize);
@@ -431,8 +435,6 @@
             showUserAgent();
             addBtn.addEventListener("click", addNote);
             clearAllBtn.addEventListener("click", clearAllNotes);
-
-            // Step 29: Enter key shortcut on title input
             titleInput.addEventListener("keydown", (e) => {
                 if (e.key === "Enter") {
                     addNote();
