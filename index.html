@@ -360,6 +360,22 @@
         userAgentSpan.textContent = agent;
         }
 
+        function addSampleNotes() {
+            if (notes.length === 0) {
+                notes.push({
+                 id: nextId++,
+                 title: "Hello BOM",
+                 content: "Try resizing the window → watch width/height update!"
+            });
+            notes.push({
+                 id: nextId++,
+                title: "Delete me",
+                content: "Click delete and confirm."
+        });
+        renderNotes();
+            }
+        }
+
         addBtn.addEventListener("click", addNote);
         clearAllBtn.addEventListener("click", clearAllNotes);
         notesContainer.addEventListener("click", (e) => {
