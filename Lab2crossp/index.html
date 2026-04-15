@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Task Flow Board</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar__left">
+      <h1 class="brand">Task Flow Board</h1>
+      <p class="subtitle">JavaScript DOM Lab</p>
+    </div>
+
+    <div class="topbar__right">
+      <div class="pill" id="overallCount">0 tasks</div>
+
+      <div class="filter-box">
+        <label for="priorityView">Priority</label>
+        <select id="priorityView">
+          <option value="all">All</option>
+          <option value="high">High</option>
+          <option value="medium">Medium</option>
+          <option value="low">Low</option>
+        </select>
+      </div>
+    </div>
+  </header>
+
+  <main class="layout">
+    <section class="lane lane--todo" id="todo">
+      <div class="lane__head">
+        <div>
+          <h2>To Do</h2>
+          <span class="mini-count" id="todoCount">0</span>
+        </div>
+      </div>
+
+      <ul class="cards" id="todoCards"></ul>
+
+      <button class="action-btn action-btn--ghost open-create" data-lane="todo">
+        + New Task
+      </button>
+    </section>
+
+    <section class="lane lane--progress" id="inprogress">
+      <div class="lane__head">
+        <div>
+          <h2>In Progress</h2>
+          <span class="mini-count" id="progressCount">0</span>
+        </div>
+      </div>
+
+      <ul class="cards" id="progressCards"></ul>
+
+      <button class="action-btn action-btn--ghost open-create" data-lane="inprogress">
+        + New Task
+      </button>
+    </section>
+
+    <section class="lane lane--done" id="done">
+      <div class="lane_head lane_head--spread">
+        <div>
+          <h2>Done</h2>
+          <span class="mini-count" id="doneCount">0</span>
+        </div>
+
+        <button class="action-btn action-btn--light" id="removeDoneBtn">
+          Clear Done
+        </button>
+      </div>
+
+      <ul class="cards" id="doneCards"></ul>
+
+      <button class="action-btn action-btn--ghost open-create" data-lane="done">
+        + New Task
+      </button>
+    </section>
+  </main>
+
+  <div class="dialog-backdrop hidden" id="dialogBackdrop">
+    <div class="dialog">
+      <h3 id="dialogHeading">Add Task</h3>
+
+      <div class="field">
+        <label for="entryTitle">Task Title</label>
+        <input id="entryTitle" type="text" placeholder="Enter task title">
+      </div>
+
+      <div class="field">
+        <label for="entryDesc">Description</label>
+        <textarea id="entryDesc" rows="4" placeholder="Enter task description"></textarea>
+      </div>
+
+      <div class="field-grid">
+        <div class="field">
+          <label for="entryPriority">Priority</label>
+          <select id="entryPriority">
+            <option value="high">High</option>
+            <option value="medium">Medium</option>
+            <option value="low">Low</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="entryDate">Due Date</label>
+          <input id="entryDate" type="date">
+        </div>
+      </div>
+
+      <div class="dialog-actions">
+        <button class="action-btn action-btn--primary" id="confirmBtn">Save</button>
+        <button class="action-btn action-btn--light" id="closeBtn">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="taskmanager.js"></script>
+</body>
+</html>
